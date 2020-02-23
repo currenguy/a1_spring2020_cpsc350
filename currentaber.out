@@ -4,15 +4,31 @@ Chapman Email: ctaber@chapman.edu
 Course Number and Section: CPSC 350-01
 Assignment 1: C++ Review
 
------------------------- 
+------------------------
 
-SUM:                   32
-NUMBER OF LINES:        5
-MEAN:                 6.4
-LINE LENGTHS STRING:8_6_6_6_6
-VARIANCE:            0.64
-STANDARD DEVIATION:   0.8
-PROB A:              0.25
-PROB C:              0.25
-PROB T:              0.25
-PROB G:              0.25
+SUM:                  106
+MEAN:                21.2
+VARIANCE:           54.56
+STD DEVIATION:      7.38647
+
+PROB A:             0.198113
+PROB C:             0.226415
+PROB T:             0.188679
+PROB G:             0.386792
+
+PROB AA:            0.0943396
+PROB AC:            0.0377358
+PROB AT:            0.0754717
+PROB AG:            0.0566038
+PROB CA:            0.0188679
+PROB CC:            0.113208
+PROB CT:            0.0377358
+PROB CG:                0
+PROB TA:                0
+PROB TC:                0
+PROB TT:            0.0943396
+PROB TG:            0.0566038
+PROB GA:            0.0188679
+PROB GC:            0.113208
+PROB GT:            0.0188679
+PROB GG:            0.0566038

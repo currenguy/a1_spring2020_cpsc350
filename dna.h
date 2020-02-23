@@ -22,8 +22,7 @@ class DNA
 
   private:
     string m_lineLengths;
-    const unsigned int NUCLEOTIDE_POSSIBLITIES = 4;
-    const unsigned int BIGRAM_POSSIBILITIES = 16;
+    const unsigned int m_BIGRAM_POSSIBILITIES = 16;
     unsigned int m_sum;
     unsigned int m_numLines;
     unsigned int m_A;
@@ -80,15 +79,27 @@ class DNA
 
     //Computes the relative probability of each nucleotide
     double getProbA();
-
     double getProbC();
-
     double getProbT();
-
     double getProbG();
 
     //Computes the relative probability of each nucleiotide bigram
-    double getRelProbBigram();
+    double getProbAA();
+    double getProbAC();
+    double getProbAT();
+    double getProbAG();
+    double getProbCA();
+    double getProbCC();
+    double getProbCT();
+    double getProbCG();
+    double getProbTA();
+    double getProbTC();
+    double getProbTT();
+    double getProbTG();
+    double getProbGA();
+    double getProbGC();
+    double getProbGT();
+    double getProbGG();
 
     //Outputs the labeled results to currentaber.out
     string printResults();

@@ -83,24 +83,115 @@ bool DNA::isValid(string s)
 //Adds length of a line in the file to the sum
 void DNA::addToSum(string s)
 {
+  bool morePairs = true;
+  bool evenIteration = true;
   int sum = 0;
   for (int i = 0; i < s.size(); ++i)
   {
+    if (i == s.size() - 1)
+    {
+      morePairs = false;
+    }
+    if (i % 2 == 1)
+    {
+      evenIteration = false;
+    }
+    else
+    {
+      evenIteration = true;
+    }
+
     if (s[i] == 'A')
     {
       ++m_A;
+      if (evenIteration == true && morePairs == true)
+      {
+        if (s[i + 1] == 'A')
+        {
+          ++m_AA;
+        }
+        else if (s[i + 1] == 'C')
+        {
+          ++m_AC;
+        }
+        else if (s[i + 1] == 'T')
+        {
+          ++m_AT;
+        }
+        else if (s[i + 1] == 'G')
+        {
+          ++m_AG;
+        }
+      }
     }
     else if (s[i] == 'C')
     {
       ++m_C;
+      if (evenIteration == true && morePairs == true)
+      {
+        if (s[i + 1] == 'A')
+        {
+          ++m_CA;
+        }
+        else if (s[i + 1] == 'C')
+        {
+          ++m_CC;
+        }
+        else if (s[i + 1] == 'T')
+        {
+          ++m_CT;
+        }
+        else if (s[i + 1] == 'G')
+        {
+          ++m_CG;
+        }
+      }
     }
     else if (s[i] == 'T')
     {
       ++m_T;
+      if (evenIteration == true && morePairs == true)
+      {
+        if (s[i + 1] == 'A')
+        {
+          ++m_TA;
+        }
+        else if (s[i + 1] == 'C')
+        {
+          ++m_TC;
+        }
+        else if (s[i + 1] == 'T')
+        {
+          ++m_TT;
+        }
+        else if (s[i + 1] == 'G')
+        {
+          ++m_TG;
+        }
+      }
     }
     else if (s[i] == 'G')
     {
       ++m_G;
+      if (evenIteration == true && morePairs == true)
+      {
+        if (s[i + 1] == 'A')
+        {
+          ++m_GA;
+        }
+        else if (s[i + 1] == 'C')
+        {
+          ++m_GC;
+        }
+        else if (s[i + 1] == 'T')
+        {
+          ++m_GT;
+        }
+        else if (s[i + 1] == 'G')
+        {
+          ++m_GG;
+        }
+      }
     }
     ++sum;
   }
@@ -151,25 +242,7 @@ double DNA::getVariance()
 //Returns the standard deviation of the string lengths
 double DNA::getStdDeviation()
 {
-  double numerator = 0;
-  double dev = 0;
-  int tempNum = 0;
-  string localLineLengths = this->getLineLengths();
-  while (localLineLengths.size() > 0)
-  {
-    if (localLineLengths.find('_') != string::npos)
-    {
-      tempNum = stoi(localLineLengths.substr(0, localLineLengths.find('_')));
-      localLineLengths = localLineLengths.substr(localLineLengths.find('_') + 1, localLineLengths.size() - 1);
-    }
-    else
-    {
-      tempNum = stoi(localLineLengths);
-      localLineLengths = "";
-    }
-    numerator += (((tempNum - this->getMean()) * (tempNum - this->getMean())) / this->getNumLines());
-  }
-  return sqrt(numerator);
+  return sqrt(this->getVariance());
 }
 
 //Computes the relative probability of each nucleotide
@@ -196,11 +269,89 @@ double DNA::getProbG()
   return (double)m_G / this->getSum();
 }
 
-//Computes the relative probability of each nucleiotide bigram
-double DNA::getRelProbBigram()
+double DNA::getProbAA()
 {
-
+  return (double)m_AA / (this->getSum() / 2);
 }
+
+double DNA::getProbAC()
+{
+  return (double)m_AC / (this->getSum() / 2);
+}
+
+double DNA::getProbAT()
+{
+  return (double)m_AT / (this->getSum() / 2);
+}
+
+double DNA::getProbAG()
+{
+  return (double)m_AG / (this->getSum() / 2);
+}
+
+double DNA::getProbCA()
+{
+  return (double)m_CA / (this->getSum() / 2);
+}
+
+double DNA::getProbCC()
+{
+  return (double)m_CC / (this->getSum() / 2);
+}
+
+double DNA::getProbCT()
+{
+  return (double)m_CT / (this->getSum() / 2);
+}
+
+double DNA::getProbCG()
+{
+  return (double)m_CG / (this->getSum() / 2);
+}
+
+double DNA::getProbTA()
+{
+  return (double)m_TA / (this->getSum() / 2);
+}
+
+double DNA::getProbTC()
+{
+  return (double)m_TC / (this->getSum() / 2);
+}
+
+double DNA::getProbTT()
+{
+  return (double)m_TT / (this->getSum() / 2);
+}
+
+double DNA::getProbTG()
+{
+  return (double)m_TG / (this->getSum() / 2);
+}
+
+double DNA::getProbGA()
+{
+  return (double)m_GA / (this->getSum() / 2);
+}
+
+double DNA::getProbGC()
+{
+  return (double)m_GC / (this->getSum() / 2);
+}
+
+double DNA::getProbGT()
+{
+  return (double)m_GT / (this->getSum() / 2);
+}
+
+double DNA::getProbGG()
+{
+  return (double)m_AG / (this->getSum() / 2);
+}
+
+
+//Computes the relative probability of each nucleiotide bigram
+
 
 //Reads a file provided in the command line
 // - Doesn't matter if strings are capitalized  or not in file
@@ -280,20 +431,14 @@ void DNA::readFile(string filename)
     outFS << setw(20) << left << "SUM:";
     outFS << setw(5) << right << this->getSum() << endl;
 
-    outFS << setw(20) << left << "NUMBER OF LINES:";
-    outFS << setw(5) << right << this->getNumLines() << endl;
-
     outFS << setw(20) << left << "MEAN:";
     outFS << setw(5) << right << this->getMean() << endl;
-
-    outFS << setw(20) << left << "LINE LENGTHS STRING:";
-    outFS << setw(5) << right << this->getLineLengths() << endl;
 
     outFS << setw(20) << left << "VARIANCE:";
     outFS << setw(5) << right << this->getVariance() << endl;
 
-    outFS << setw(20) << left << "STANDARD DEVIATION:";
-    outFS << setw(5) << right << this->getStdDeviation() << endl;
+    outFS << setw(20) << left << "STD DEVIATION:";
+    outFS << setw(5) << right << this->getStdDeviation() << endl << endl;
 
     outFS << setw(20) << left << "PROB A:";
     outFS << setw(5) << right << this->getProbA() << endl;
@@ -302,7 +447,43 @@ void DNA::readFile(string filename)
     outFS << setw(20) << left << "PROB T:";
     outFS << setw(5) << right << this->getProbT() << endl;
     outFS << setw(20) << left << "PROB G:";
-    outFS << setw(5) << right << this->getProbG() << endl;
+    outFS << setw(5) << right << this->getProbG() << endl << endl;
+
+    outFS << setw(20) << left << "PROB AA:";
+    outFS << setw(5) << right << this->getProbAA() << endl;
+    outFS << setw(20) << left << "PROB AC:";
+    outFS << setw(5) << right << this->getProbAC() << endl;
+    outFS << setw(20) << left << "PROB AT:";
+    outFS << setw(5) << right << this->getProbAT() << endl;
+    outFS << setw(20) << left << "PROB AG:";
+    outFS << setw(5) << right << this->getProbAG() << endl;
+
+    outFS << setw(20) << left << "PROB CA:";
+    outFS << setw(5) << right << this->getProbCA() << endl;
+    outFS << setw(20) << left << "PROB CC:";
+    outFS << setw(5) << right << this->getProbCC() << endl;
+    outFS << setw(20) << left << "PROB CT:";
+    outFS << setw(5) << right << this->getProbCT() << endl;
+    outFS << setw(20) << left << "PROB CG:";
+    outFS << setw(5) << right << this->getProbCG() << endl;
+
+    outFS << setw(20) << left << "PROB TA:";
+    outFS << setw(5) << right << this->getProbTA() << endl;
+    outFS << setw(20) << left << "PROB TC:";
+    outFS << setw(5) << right << this->getProbTC() << endl;
+    outFS << setw(20) << left << "PROB TT:";
+    outFS << setw(5) << right << this->getProbTT() << endl;
+    outFS << setw(20) << left << "PROB TG:";
+    outFS << setw(5) << right << this->getProbTG() << endl;
+
+    outFS << setw(20) << left << "PROB GA:";
+    outFS << setw(5) << right << this->getProbGA() << endl;
+    outFS << setw(20) << left << "PROB GC:";
+    outFS << setw(5) << right << this->getProbGC() << endl;
+    outFS << setw(20) << left << "PROB GT:";
+    outFS << setw(5) << right << this->getProbGT() << endl;
+    outFS << setw(20) << left << "PROB GG:";
+    outFS << setw(5) << right << this->getProbGG() << endl;
 
     cout << "Results from \"" << filename;
     cout << "\" printed to \"currentaber.out\"" << endl << endl;
