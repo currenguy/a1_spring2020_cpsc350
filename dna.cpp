@@ -34,14 +34,13 @@ DNA::~DNA()
 
 }
 
-
-//Accessor for sum
+//Returns the sum of letters in the file
 int DNA::getSum()
 {
   return m_sum;
 }
 
-//Accessor for number of lines
+//Returns the number of DNA lines in the file
 int DNA::getNumLines()
 {
   return m_numLines;
@@ -53,12 +52,14 @@ double DNA::getMean()
   return (double)m_sum / m_numLines;
 }
 
+//Returns a string that stores each line's length
+//Each integer is delimited by a '_'
 string DNA::getLineLengths()
 {
   return m_lineLengths;
 }
 
-//Converts input to an uppercase string
+//Converts an input string to an uppercase string
 void DNA::makeUpper(string& s)
 {
   for (int i = 0; i < s.size(); ++i)
@@ -67,7 +68,7 @@ void DNA::makeUpper(string& s)
   }
 }
 
-//Checks if a line in the file is DNA
+//Checks if a line only contains valid nucleotide letters
 bool DNA::isValid(string s)
 {
   for (int i = 0; i < s.size(); ++i)
@@ -81,6 +82,9 @@ bool DNA::isValid(string s)
 }
 
 //Adds length of a line in the file to the sum
+//Counts the number of nucleotides in a line
+//Counts the number of nucleotide bigrams in a line (non-overlapping)
+//In an odd string, the last nucleotide doens't have a pair
 void DNA::addToSum(string s)
 {
   bool morePairs = true;
@@ -199,7 +203,7 @@ void DNA::addToSum(string s)
   this->appendToLineLengths(sum);
 }
 
-//Appends a line's sum a string
+//Appends a line's sum to the string  m_lineLengths
 void DNA::appendToLineLengths(int i)
 {
   if (m_lineLengths.size() == 0)
@@ -213,7 +217,7 @@ void DNA::appendToLineLengths(int i)
   }
 }
 
-//Returns the variance
+//Returns the variance of string lengths from the file
 double DNA::getVariance()
 {
   double numerator = 0;
@@ -245,30 +249,28 @@ double DNA::getStdDeviation()
   return sqrt(this->getVariance());
 }
 
-//Computes the relative probability of each nucleotide
+//The following functions return a relative probability of each nucleotide
 double DNA::getProbA()
 {
   return (double)m_A / this->getSum();
 }
 
-//Computes the relative probability of each nucleotide
 double DNA::getProbC()
 {
   return (double)m_C / this->getSum();
 }
 
-//Computes the relative probability of each nucleotide
 double DNA::getProbT()
 {
   return (double)m_T / this->getSum();
 }
 
-//Computes the relative probability of each nucleotide
 double DNA::getProbG()
 {
   return (double)m_G / this->getSum();
 }
 
+//The following functions return a relative probability of each bigram
 double DNA::getProbAA()
 {
   return (double)m_AA / (this->getSum() / 2);
@@ -349,16 +351,11 @@ double DNA::getProbGG()
   return (double)m_AG / (this->getSum() / 2);
 }
 
-
-//Computes the relative probability of each nucleiotide bigram
-
-
 //Reads a file provided in the command line
-// - Doesn't matter if strings are capitalized  or not in file
-// - Keep asking until the user doesn't want to
+//Asks the user if they want to enter another file or quit
 void DNA::readFile(string filename)
 {
-  //Will repeat process as long as the user doesn't type "quit"
+  //Will repeat process as long as the user doesn't type "exit"
   while (filename != "exit")
   {
     ifstream inFS;
@@ -419,6 +416,7 @@ void DNA::readFile(string filename)
       }
     }
 
+    //Results output to the output file
     outFS << "Full Name: Curren Taber" << endl;
     outFS << "Student ID: 002325149" << endl;
     outFS << "Chapman Email: ctaber@chapman.edu" << endl;
@@ -483,25 +481,172 @@ void DNA::readFile(string filename)
     outFS << setw(20) << left << "PROB GT:";
     outFS << setw(5) << right << this->getProbGT() << endl;
     outFS << setw(20) << left << "PROB GG:";
-    outFS << setw(5) << right << this->getProbGG() << endl;
+    outFS << setw(5) << right << this->getProbGG() << endl <<endl;
 
     cout << "Results from \"" << filename;
     cout << "\" printed to \"currentaber.out\"" << endl << endl;
 
-    //Closes the file
+    //Closes the files
     inFS.close();
     outFS.close();
+    this->generateDNA();
 
     cout << "Enter another file name (type \"exit\" to exit):" << endl;
     cin >> filename;
   }
 }
 
-//Generates 1000 strings whose lengths follow the Gaussian distribution
-// - Strings have the same mean and variance as calculated above
-// - Relative frequency of nucleotides will follow as calculated above
-// - Append results to the output results
+//Generates 1000 strings whose lengths follow the Gaussian Distribution
 void DNA::generateDNA()
 {
+  ofstream outFS;
+  outFS.open("currentaber.out", ios::app);
 
+  outFS << setw(25) << setfill('-') << " " << endl << endl;
+  outFS << setfill(' ');
+
+  double a = 0.0;
+  double b = 0.0;
+  double c = 0.0;
+  double d = 0.0;
+
+  int sum = 0;
+  const int NUM_TO_GENERATE = 1000;
+
+  for (int i = 0; i < NUM_TO_GENERATE; ++i)
+  {
+    //Generates random numbers between 0 and (RAND_MAX - 1)
+    a = rand() % RAND_MAX;
+    b = rand() % RAND_MAX;
+    //Dividing by RAND_MAX to place in range [0,1)
+    a /= RAND_MAX;
+    b /= RAND_MAX;
+    c = sqrt(-2 * log(a)) * cos(2 * M_PI * b);
+    d = round((this->getStdDeviation() * c) + this->getMean());
+    sum += d;
+
+    string newDNA = "";
+    for (int j = 0; j < d; ++j)
+    {
+      if (j % 2 == 0)
+      {
+        double chooseLetter = rand() % RAND_MAX;
+        chooseLetter /= RAND_MAX;
+        if (chooseLetter < this->getProbA())
+        {
+          newDNA += 'A';
+        }
+        else if (chooseLetter < this->getProbA() + this->getProbC())
+        {
+          newDNA += 'C';
+        }
+        else if (chooseLetter < this->getProbA() + this->getProbC() + this->getProbT())
+        {
+          newDNA += 'T';
+        }
+        else
+        {
+          newDNA += 'G';
+        }
+      }
+      else
+      {
+        if (newDNA[j] == 'A')
+        {
+          double possible = 100 * (getProbAA() + getProbAC() + getProbAT() + getProbAG());
+          double chooseLetter = rand() % (int)round(possible);
+          chooseLetter /= 100;
+          if (chooseLetter < this->getProbAA())
+          {
+            newDNA += 'A';
+          }
+          else if (chooseLetter < this->getProbAA() + this->getProbAC())
+          {
+            newDNA += 'C';
+          }
+          else if (chooseLetter < this->getProbAA() + this->getProbAC() + this->getProbAT())
+          {
+            newDNA += 'T';
+          }
+          else
+          {
+            newDNA += 'G';
+          }
+        }
+        else if (newDNA[j] == 'C')
+        {
+          double possible = 100 * (getProbCA() + getProbCC() + getProbCT() + getProbCG());
+          double chooseLetter = rand() % (int)round(possible);
+          chooseLetter /= 100;
+          if (chooseLetter < this->getProbCA())
+          {
+            newDNA += 'A';
+          }
+          else if (chooseLetter < this->getProbCA() + this->getProbCC())
+          {
+            newDNA += 'C';
+          }
+          else if (chooseLetter < this->getProbCA() + this->getProbCC() + this->getProbCT())
+          {
+            newDNA += 'T';
+          }
+          else
+          {
+            newDNA += 'G';
+          }
+        }
+        else if (newDNA[j] == 'T')
+        {
+          double possible = 100 * (getProbTA() + getProbTC() + getProbTT() + getProbTG());
+          double chooseLetter = rand() % (int)round(possible);
+          chooseLetter /= 100;
+          if (chooseLetter < this->getProbTA())
+          {
+            newDNA += 'A';
+          }
+          else if (chooseLetter < this->getProbTA() + this->getProbTC())
+          {
+            newDNA += 'C';
+          }
+          else if (chooseLetter < this->getProbTA() + this->getProbTC() + this->getProbTT())
+          {
+            newDNA += 'T';
+          }
+          else
+          {
+            newDNA += 'G';
+          }
+        }
+        else if (newDNA[j] == 'G')
+        {
+          double possible = 100 * (getProbGA() + getProbGC() + getProbGT() + getProbGG());
+          double chooseLetter = rand() % (int)round(possible);
+          chooseLetter /= 100;
+          if (chooseLetter < this->getProbGA())
+          {
+            newDNA += 'A';
+          }
+          else if (chooseLetter < this->getProbGA() + this->getProbGC())
+          {
+            newDNA += 'C';
+          }
+          else if (chooseLetter < this->getProbGA() + this->getProbGC() + this->getProbGT())
+          {
+            newDNA += 'T';
+          }
+          else
+          {
+            newDNA += 'G';
+          }
+        }
+      }
+    }
+    outFS << newDNA << endl;
+  }
+
+  cout << "1000 DNA samples following ";
+  cout << "the Gaussian distribution above ";
+  cout << "printed to \"currentaber.out\"" << endl << endl;
+
+  outFS.close();
 }

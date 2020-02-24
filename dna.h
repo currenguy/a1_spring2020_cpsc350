@@ -6,6 +6,7 @@
 #include <string>
 #include <cmath>
 #include <iomanip>
+#include <cstdlib>
 
 using namespace std;
 
@@ -18,6 +19,8 @@ class DNA
     //Destructor
     ~DNA();
 
+    //Reads a file provided in the command line
+    //Asks the user if they want to enter another file or quit
     void readFile(string filename);
 
   private:
@@ -46,44 +49,47 @@ class DNA
     unsigned int m_GT;
     unsigned int m_GG;
 
-    //Increments number of lines
-    void incNumLines();
-
-    //Accessor for sum
+    //Returns the sum of letters in the file
     int getSum();
 
-    //Accessor for number of lines
+    //Returns the number of DNA lines in the file
     int getNumLines();
 
     //Returns the average length of strings from the file
     double getMean();
 
-    //Converts input to an uppercase string
+    //Converts an input string to an uppercase string
     void makeUpper(string& s);
 
-    //Checks if a line in the file is DNA
+    //Checks if a line only contains valid nucleotide letters
     bool isValid(string s);
 
     //Adds length of a line in the file to the sum
+    //Counts the number of nucleotides in a line
+    //Counts the number of nucleotide bigrams in a line (non-overlapping)
+    //In an odd string, the last nucleotide doens't have a pair
     void addToSum(string s);
 
+    //Appends a line's sum to the string  m_lineLengths
     void appendToLineLengths(int d);
 
-    //Computes the variance of the string lengths
+    //Returns the variance of string lengths from the file
     double getVariance();
 
+    //Returns a string that stores each line's length
+    //Each integer is delimited by a '_'
     string getLineLengths();
 
-    //Computes the standard deviation of the string lengths
+    //Returns the standard deviation of the string lengths
     double getStdDeviation();
 
-    //Computes the relative probability of each nucleotide
+    //The following functions return a relative probability of each nucleotide
     double getProbA();
     double getProbC();
     double getProbT();
     double getProbG();
 
-    //Computes the relative probability of each nucleiotide bigram
+    //The following functions return a relative probability of each bigram
     double getProbAA();
     double getProbAC();
     double getProbAT();
@@ -101,16 +107,8 @@ class DNA
     double getProbGT();
     double getProbGG();
 
-    //Outputs the labeled results to currentaber.out
-    string printResults();
-
-    //Generates 1000 strings whose lengths follow the Gaussian distribution
-    // - Strings have the same mean and variance as calculated above
-    // - Relative frequency of nucleotides will follow as calculated above
-    // - Append results to the output results
+    //Generates 1000 strings whose lengths follow the Gaussian Distribution
     void generateDNA();
-
-
 };
 
 #endif

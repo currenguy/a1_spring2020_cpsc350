@@ -22,3 +22,5 @@
 - https://stackoverflow.com/questions/7571326/why-does-dividing-two-int-not-yield-the-right-value-when-assigned-to-double
 - http://www.cplusplus.com/forum/beginner/181119/
 - https://stackoverflow.com/questions/14265581/parse-split-a-string-in-c-using-string-delimiter-standard-c
+- https://www.geeksforgeeks.org/round-in-cpp/
+- https://stackoverflow.com/questions/48716109/generating-a-random-number-between-0-1-c
